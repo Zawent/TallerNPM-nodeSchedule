@@ -1,6 +1,5 @@
-// index.js
-const schedule = require('node-schedule');
 const chalk = require('chalk');
+const schedule = require('node-schedule');
 const readline = require('readline');
 const fs = require('fs');
 
@@ -13,7 +12,7 @@ const rl = readline.createInterface({
 
 function mostrarMenu() {
   console.clear();
-  console.log(chalk.blue.bold("=== Recordatorio de Tareas ==="));
+  console.log(chalk.bold.blue('=== Recordatorio de Tareas ==='));
   console.log("1. Agendar una nueva tarea");
   console.log("2. Ver tareas agendadas");
   console.log("3. Salir");
@@ -38,28 +37,55 @@ function mostrarMenu() {
 
 function agendarTarea() {
   rl.question("Describe la tarea: ", (descripcion) => {
-    rl.question("Hora (0-23): ", (hora) => {
-      rl.question("Minuto (0-59): ", (minuto) => {
-        const fecha = new Date();
-        fecha.setHours(parseInt(hora));
-        fecha.setMinutes(parseInt(minuto));
-        fecha.setSeconds(0);
+    rl.question("Año (YYYY): ", (anio) => {
+      rl.question("Mes (1-12): ", (mes) => {
+        rl.question("Día (1-31): ", (dia) => {
+          rl.question("Hora (1-24): ", (horaInput) => {
+            const hora = parseInt(horaInput);
+            if (isNaN(hora) || hora < 1 || hora > 24) {
+              console.log(chalk.red("⚠️  Hora inválida. Usa un número entre 1 y 24."));
+              return setTimeout(agendarTarea, 1500);
+            }
 
-        const tarea = {
-          descripcion,
-          hora,
-          minuto
-        };
+            rl.question("Minuto (1-60): ", (minutoInput) => {
+              const minuto = parseInt(minutoInput);
+              if (isNaN(minuto) || minuto < 1 || minuto > 60) {
+                console.log(chalk.red("⚠️  Minuto inválido. Usa un número entre 1 y 60."));
+                return setTimeout(agendarTarea, 1500);
+              }
 
-        tareas.push(tarea);
-        guardarTareas();
+              const fecha = new Date(
+                parseInt(anio),
+                parseInt(mes) - 1,
+                parseInt(dia),
+                hora === 24 ? 0 : hora,
+                minuto === 60 ? 0 : minuto,
+                0
+              );
 
-        schedule.scheduleJob(fecha, () => {
-          console.log(chalk.greenBright(`⏰ ¡Recordatorio!: ${descripcion}`));
+              const tarea = {
+                descripcion,
+                anio,
+                mes,
+                dia,
+                hora: horaInput,
+                minuto: minutoInput
+              };
+
+              tareas.push(tarea);
+              guardarTareas();
+
+              schedule.scheduleJob(fecha, () => {
+                console.log(chalk.bgRed.white.bold('\n🚨🚨🚨 RECORDATORIO 🚨🚨🚨'));
+                console.log(chalk.yellowBright.bold(`📌 Tarea: ${descripcion}`));
+                console.log(chalk.bgRed.white.bold('=========================\n'));
+              });
+
+              console.log(chalk.green("✅ Tarea agendada con éxito."));
+              setTimeout(mostrarMenu, 2000);
+            });
+          });
         });
-
-        console.log(chalk.yellow("Tarea agendada con éxito."));
-        setTimeout(mostrarMenu, 2000);
       });
     });
   });
@@ -67,12 +93,14 @@ function agendarTarea() {
 
 function verTareas() {
   console.clear();
-  console.log(chalk.cyan.bold("Tareas agendadas:"));
+  console.log(chalk.cyan.bold("📋 Tareas agendadas:"));
   if (tareas.length === 0) {
     console.log("No hay tareas programadas.");
   } else {
     tareas.forEach((t, i) => {
-      console.log(`${i + 1}. ${t.descripcion} a las ${t.hora}:${t.minuto}`);
+      console.log(
+        `${i + 1}. ${t.descripcion} - ${t.anio}/${t.mes.padStart(2, '0')}/${t.dia.padStart(2, '0')} ${t.hora.padStart(2, '0')}:${t.minuto.padStart(2, '0')}`
+      );
     });
   }
   rl.question("Presiona Enter para volver al menú...", () => mostrarMenu());
