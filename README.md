@@ -1,29 +1,46 @@
 # 📅 Recordatorio de Tareas (Node.js CLI)
 
-Una aplicación de consola sencilla para **agendar recordatorios de tareas** con notificaciones programadas en tiempo real, utilizando `node-schedule` y `chalk`.
+Una aplicación de consola sencilla para **agendar recordatorios de tareas** usando `Node.js`, que te notifica visualmente cuando es hora de cumplir una actividad pendiente.
 
 ---
 
-## 🚀 Características
+## ❓ Descripción del problema
 
-- Agendar tareas con fecha y hora específicas.
-- Recordatorios visuales en la consola.
-- Visualización de tareas agendadas.
-- Persistencia local usando `tareas.json`.
+Muchas personas olvidan tareas importantes en su día a día. Esta aplicación busca **resolver ese problema** permitiendo al usuario **agendar tareas** y recibir un **recordatorio visual en consola** a la hora indicada.
+
+---
+
+## 🧰 Librerías utilizadas
+### 1. [chalk](https://www.npmjs.com/package/chalk)
+Permite estilizar la consola (colores, negritas, etc.), lo que hace más visible y clara la interacción del usuario.
+### 2. [node-schedule](https://www.npmjs.com/package/node-schedule)
+Librería que permite **programar la ejecución de funciones** en momentos específicos, como alarmas o recordatorios.
+
+---
+
+## ⚙️ ¿Cómo se implementó?
+
+- Se utiliza `readline` para crear un **menú interactivo en consola**.
+- Cada tarea agendada incluye una **fecha y hora**.
+- `node-schedule` se encarga de ejecutar un **recordatorio visual** con `chalk` en el momento programado.
+- Las tareas se almacenan en un archivo local `tareas.json` usando `fs`, para garantizar persistencia si se desea expandir la app más adelante.
+- Se valida que las horas estén entre 1 y 24, y los minutos entre 1 y 60 (ajustados internamente).
 
 ---
 
 ## 📦 Requisitos
 
 - Node.js (v14 o superior)
-- npm (gestor de paquetes de Node)
+- npm (instalador de paquetes de Node.js)
 
 ---
 
 ## 🔧 Instalación
 
 1. Clona este repositorio:
+
 git clone https://github.com/Zawent/TallerNPM-nodeSchedule.git
+cd TallerNPM-nodeSchedule
 
 2. Instala las dependencias:
 npm install
