@@ -56,6 +56,10 @@ Menú interactivo:
 
 ⚠️ La hora debe estar entre 1 y 24, y el minuto entre 1 y 60. Internamente se ajustan para que funcionen correctamente con el objeto Date.
 
+📹 Video de presentación
+👉 https://www.youtube.com/watch?v=wQjEnRYUXzY&ab_channel=UrielVargas
+
+
 
 ## 🛠 Dependencias
 chalk: Para resaltar textos en la consola.
